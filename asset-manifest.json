@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/game_master/static/css/main.f855e6bc.css",
+    "main.js": "/game_master/static/js/main.31d166b7.js",
+    "static/js/453.2813d2f0.chunk.js": "/game_master/static/js/453.2813d2f0.chunk.js",
+    "static/media/logo.svg": "/game_master/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/game_master/index.html",
+    "main.f855e6bc.css.map": "/game_master/static/css/main.f855e6bc.css.map",
+    "main.31d166b7.js.map": "/game_master/static/js/main.31d166b7.js.map",
+    "453.2813d2f0.chunk.js.map": "/game_master/static/js/453.2813d2f0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f855e6bc.css",
+    "static/js/main.31d166b7.js"
+  ]
+}
