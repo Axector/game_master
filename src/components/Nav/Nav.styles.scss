@@ -1,0 +1,26 @@
+.navigation-wrapper {
+  background-color: black;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+
+  .links {
+    margin: 0;
+    padding-inline: 35px;
+    display: flex;
+    gap: 20px;
+    list-style-type: none;
+  }
+
+  .link {
+    font-size: 20px;
+    text-decoration: none;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 15px 20px;
+  }
+}

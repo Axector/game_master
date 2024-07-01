@@ -1,24 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import MapPage from './routes/MapPage/MapPage.component';
+import HomePage from './routes/Home/HomePage.component';
+import Nav from './components/Nav/Nav.component';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './store';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Nav />
+        <Routes>
+          <Route path="/game_master" element={<HomePage />} />
+          <Route path="/game_master/map" element={<MapPage />} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   );
 }
 
