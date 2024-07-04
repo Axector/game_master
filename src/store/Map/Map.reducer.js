@@ -1,8 +1,10 @@
 import { UPDATE_MAP_STORE } from './Map.action';
 
 const getInitialState = () => ({
-  mapWidth: 0,
-  mapHeight: 0,
+  map: [
+    [{ type: "color", data: "#777777" }, { type: "color", data: "#777777" }],
+    [{ type: "image", data: "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg" }, { type: "color", data: "#777777" }],
+  ]
 });
 
 export const MapReducer = (state = getInitialState(), action) => {

@@ -6,7 +6,7 @@ import "./Nav.styles.scss";
 export class Nav extends PureComponent {
   render() {
     return (
-      <nav className="navigation-wrapper">
+      <nav className="Nav">
         <ul className="links">
           <li className="link-wrapper">
             <Link className="link" to="/game_master">Home</Link>

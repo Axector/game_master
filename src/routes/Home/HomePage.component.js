@@ -5,7 +5,7 @@ import "./HomePage.styles.scss";
 export class HomePage extends PureComponent {
   render() {
     return (
-      <div className="container">
+      <div className="HomePage">
         <div className="title-wrapper">
           <p className="title">Welcome to Game Master App!</p>
         </div>
