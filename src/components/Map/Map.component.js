@@ -1,62 +1,54 @@
 import { PureComponent, createRef } from "react";
-import { connect } from "react-redux";
 
 import './Map.styles.scss';
 
-export const mapStateToProps = (state) => ({
-  map: state.MapReducer.map,
-});
-
-export const mapDispatchToProps = () => ({});
-
-export class Map extends PureComponent {
+export class MapComponent extends PureComponent {
   canvasRef = createRef();
 
-  drawMapCellColor(ctx, x, y, width, height, color) {
-    ctx.fillStyle = color;
-    ctx.fillRect(x * width + x * 5, y * height + y * 5, width, height);
-  }
+  drawMapCell(ctx, cell, x, y) {
+    const { type, data } = cell;
+    const { mapCellSize } = this.props;
 
-  drawMapCellImage(ctx, x, y, width, height, image) {
-    const img = new Image();
-    img.onload = () => {
-      ctx.drawImage(img, x * width + x * 5, y * height + y * 5, width, height);
-    };
-    img.src = image;
+    switch (type) {
+      case 'image':
+        const img = new Image();
+        img.onload = () => {
+          ctx.drawImage(img, x * mapCellSize + x, y * mapCellSize + y, mapCellSize, mapCellSize);
+        };
+        img.src = data;
+
+        break;
+      default:
+      case 'color':
+        ctx.fillStyle = data;
+        ctx.fillRect(x * mapCellSize + x, y * mapCellSize + y, mapCellSize, mapCellSize);
+
+        break;
+    }
   }
 
   drawMap() {
-    const { map } = this.props;
+    const {
+      map,
+      openCellConfig,
+      mapCellSize,
+    } = this.props;
 
     const canvas = this.canvasRef.current;
     const ctx = canvas.getContext("2d");
 
-    canvas.width = 1000;
-    canvas.height = 1000;
+    canvas.width = map[0].length * mapCellSize + map[0].length;
+    canvas.height = map.length * mapCellSize + map.length;
 
-    canvas.addEventListener('click', (e) => {
-      const {
-        offsetX: x,
-        offsetY: y,
-      } = e;
-
-      console.log(`XXX position: [${x}, ${y}]`);
+    canvas.addEventListener('click', ({ offsetX, offsetY }) => {
+      openCellConfig({ x: offsetX, y: offsetY });
     });
 
-    for (let x = 0; x < map[0].length; ++x) {
-      for (let y = 0; y < map.length; ++y) {
-        const {
-          type,
-          data,
-        } = map[y][x];
-
-        if (type === 'image') {
-          this.drawMapCellImage(ctx, x, y, 50, 50, data);
-        } else if (type === 'color') {
-          this.drawMapCellColor(ctx, x, y, 50, 50, data);
-        }
-      }
-    }
+    map.forEach((mapLine, y) => {
+      mapLine.forEach((mapCell, x) => {
+        this.drawMapCell(ctx, mapCell, x, y);
+      });
+    });
   }
 
   async waitForCanvas(func) {
@@ -64,7 +56,7 @@ export class Map extends PureComponent {
       while (!this.canvasRef.current) { }
 
       func();
-    }, 0);
+    }, 100);
   }
 
   render() {
@@ -80,4 +72,4 @@ export class Map extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Map);
+export default MapComponent;

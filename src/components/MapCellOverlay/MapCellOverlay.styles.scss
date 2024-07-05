@@ -1,0 +1,55 @@
+.MapCellOverlay {
+  background-color: #ffffff;
+  padding: 4vw;
+  width: 50vw;
+  height: 40vw;
+  display: flex;
+  flex-direction: column;
+
+  &-Tabs {
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  &-Forms {
+    height: 100%;
+  }
+
+  &-ColorForm {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 4vw;
+
+    &-Wrapper {
+      display: flex;
+      gap: 4vw;
+      margin-top: 4vw;
+      height: 100%;
+    }
+
+    &-ColorResult {
+      aspect-ratio: 1;
+      height: 100%;
+    }
+
+    &-Color {
+      display: flex;
+    }
+
+    &-Buttons {
+      display: flex;
+      justify-content: space-evenly;
+    }
+  }
+
+  &-ImageForm {
+    &-ButtonSave {
+      &[data-lesch-changed="false"] {
+        pointer-events: none;
+        background-color: #555555;
+      }
+    }
+  }
+}

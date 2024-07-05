@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import "./Nav.styles.scss";
 
-export class Nav extends PureComponent {
+export class NavComponent extends PureComponent {
   render() {
     return (
       <nav className="Nav">
@@ -20,4 +20,4 @@ export class Nav extends PureComponent {
   }
 }
 
-export default Nav;
+export default NavComponent;

@@ -1,4 +1,7 @@
-.Map-Wrapper {
-  display: grid;
+.Map {
   padding: 100px;
+
+  &-Wrapper {
+    display: grid;
+  }
 }
