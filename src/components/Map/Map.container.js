@@ -2,16 +2,16 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 import MapComponent from "./Map.component";
 import { updateMapStore } from "../../store/Map/Map.action";
-import { debounce } from "../../utils/debounce";
 
 export const mapStateToProps = (state) => ({
   map: state.MapReducer.map,
   mapCellSize: state.MapReducer.mapCellSize,
+  mapSize: state.MapReducer.mapSize,
+  spaceBetweenMapCells: state.MapReducer.spaceBetweenMapCells,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   updateSelectedCell: (selectedCell) => dispatch(updateMapStore({ selectedCell })),
-  updateMapCellWidth: (mapCellSize) => dispatch(updateMapStore({ mapCellSize })),
 });
 
 export class MapContainer extends PureComponent {
@@ -23,44 +23,29 @@ export class MapContainer extends PureComponent {
     const {
       map,
       mapCellSize,
+      mapSize,
+      spaceBetweenMapCells,
     } = this.props;
 
     return ({
       map,
       mapCellSize,
+      mapSize,
+      spaceBetweenMapCells,
     });
   }
 
-  componentDidMount() {
-    this.setMapCellWidth();
-
-    window.addEventListener('resize', debounce(this.setMapCellWidth.bind(this), 100));
-  }
-
-  setMapCellWidth() {
-    const {
-      map,
-      updateMapCellWidth,
-    } = this.props;
-
-    const mapWrapper = document.getElementsByClassName('Map-Wrapper')[0];
-    const mapWrapperWidth = mapWrapper.getBoundingClientRect().width;
-    const cellSize = mapWrapperWidth / map[0].length;
-
-    updateMapCellWidth(cellSize);
-  }
-
-  openCellConfig(mousePosition) {
+  openCellConfig({ x, y }) {
     const {
       toggleMapCellOverlay,
       mapCellSize,
       map,
+      mapSize,
       updateSelectedCell,
     } = this.props;
-    const { x, y } = mousePosition;
 
-    const xPos = Math.floor((x - map[0].length) / mapCellSize);
-    const yPos = Math.floor((y - map.length) / mapCellSize);
+    const xPos = Math.floor((x - mapSize.x) / mapCellSize);
+    const yPos = Math.floor((y - mapSize.y) / mapCellSize);
 
     updateSelectedCell({ ...map[yPos][xPos], x: xPos, y: yPos });
     toggleMapCellOverlay(true);

@@ -1,7 +1,7 @@
 import { PureComponent } from "react";
 import { Route, Routes } from "react-router-dom";
 import MapPage from "../../routes/MapPage";
-import HomePage from "../../routes/Home";
+import HomePage from "../../routes/HomePage";
 
 export class RouteComponent extends PureComponent {
   render() {

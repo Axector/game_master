@@ -6,6 +6,7 @@ import { updateMapStore } from "../../store/Map/Map.action";
 export const mapStateToProps = (state) => ({
   map: state.MapReducer.map,
   selectedCell: state.MapReducer.selectedCell,
+  defaultCell: state.MapReducer.defaultCell,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -16,12 +17,15 @@ export class MapCellOverlayContainer extends PureComponent {
   state = {
     isColorTabOpened: true,
     selectedColor: { r: 0, g: 0, b: 0 },
+    isImageChanged: false,
+    selectedImage: '',
   };
 
   containerFunctions = {
     toggleColorTab: this.toggleColorTab.bind(this),
     selectColor: this.selectColor.bind(this),
     handleSubmit: this.handleSubmit.bind(this),
+    handleImageSelect: this.handleImageSelect.bind(this),
   };
 
   containerProps() {
@@ -29,12 +33,16 @@ export class MapCellOverlayContainer extends PureComponent {
     const {
       isColorTabOpened,
       selectedColor,
+      isImageChanged,
+      selectedImage,
     } = this.state;
 
     return ({
       closeFunction,
       isColorTabOpened,
       selectedColor,
+      isImageChanged,
+      selectedImage,
     });
   }
 
@@ -51,15 +59,28 @@ export class MapCellOverlayContainer extends PureComponent {
         type,
         data,
       },
+      defaultCell: {
+        data: defaultColor,
+      },
     } = this.props;
 
-    const colors = data.replace('rgb', '').replace('(', '').replace(')', '').split(',');
-
     if (type === 'image') {
-      this.setState({ isColorTabOpened: false });
+      const colors = defaultColor.replace('rgb', '').replace('(', '').replace(')', '').split(',');
+
+      this.setState({
+        isColorTabOpened: false,
+        selectedImage: data,
+        selectColor: { r: colors[0], g: colors[1], b: colors[2] },
+      });
     } else if (type === 'color') {
-      this.setState({ isColorTabOpened: true });
-      this.setState({ selectedColor: { r: colors[0], g: colors[1], b: colors[2] } });
+      const colors = data.replace('rgb', '').replace('(', '').replace(')', '').split(',');
+
+      this.setState({
+        isColorTabOpened: true,
+        selectedColor: { r: colors[0], g: colors[1], b: colors[2] },
+        selectedImage: '',
+        isImageChanged: false,
+      });
     }
   }
 
@@ -100,36 +121,32 @@ export class MapCellOverlayContainer extends PureComponent {
     return newMap;
   }
 
-  handleColorSubmit(form) {
+  handleColorSubmit() {
     const {
       selectedCell: {
         x, y
       },
     } = this.props;
-    const colorWrappers = [].slice.call(form.getElementsByClassName('MapCellOverlay-ColorForm-Color'));
-
-    const colors = [];
-    colorWrappers.forEach((colorWrapper) => {
-      const color = colorWrapper.getElementsByTagName('input')[0].value;
-      colors.push(color);
-    });
+    const { selectedColor: {
+      r, g, b,
+    } } = this.state;
 
     const newMap = this.getMapCopy();
-    newMap[y][x] = { type: 'color', data: `rgb(${colors[0]},${colors[1]},${colors[2]})` };
+    newMap[y][x] = { type: 'color', data: `rgb(${r},${g},${b})` };
 
     return newMap;
   }
 
-  handleImageSubmit(form) {
+  handleImageSubmit() {
     const {
       selectedCell: {
         x, y
       },
     } = this.props;
-    const image = form.getElementsByClassName('MapCellOverlay-ImageForm-FileInput')[0].files[0];
+    const { selectedImage } = this.state;
 
     const newMap = this.getMapCopy();
-    const imageSrc = URL.createObjectURL(image);
+    const imageSrc = selectedImage;
     newMap[y][x] = { type: 'image', data: imageSrc };
 
     return newMap;
@@ -142,15 +159,23 @@ export class MapCellOverlayContainer extends PureComponent {
       updateMap,
       closeFunction,
     } = this.props;
-    const form = e.target;
 
     if (type === 'color') {
-      updateMap(this.handleColorSubmit(form));
+      updateMap(this.handleColorSubmit());
     } else if (type === 'image') {
-      updateMap(this.handleImageSubmit(form));
+      updateMap(this.handleImageSubmit());
     }
 
     closeFunction(e);
+  }
+
+  handleImageSelect(e) {
+    const imageUrl = URL.createObjectURL(e.target.files[0]);
+
+    this.setState({
+      isImageChanged: true,
+      selectedImage: imageUrl,
+    })
   }
 
   render() {

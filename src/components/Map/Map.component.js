@@ -7,13 +7,19 @@ export class MapComponent extends PureComponent {
 
   drawMapCell(ctx, cell, x, y) {
     const { type, data } = cell;
-    const { mapCellSize } = this.props;
+    const {
+      mapCellSize,
+      spaceBetweenMapCells,
+    } = this.props;
+
+    const xPos = x * mapCellSize + x * spaceBetweenMapCells + spaceBetweenMapCells / 2;
+    const yPos = y * mapCellSize + y * spaceBetweenMapCells + spaceBetweenMapCells / 2;
 
     switch (type) {
       case 'image':
         const img = new Image();
         img.onload = () => {
-          ctx.drawImage(img, x * mapCellSize + x, y * mapCellSize + y, mapCellSize, mapCellSize);
+          ctx.drawImage(img, xPos, yPos, mapCellSize, mapCellSize);
         };
         img.src = data;
 
@@ -21,7 +27,7 @@ export class MapComponent extends PureComponent {
       default:
       case 'color':
         ctx.fillStyle = data;
-        ctx.fillRect(x * mapCellSize + x, y * mapCellSize + y, mapCellSize, mapCellSize);
+        ctx.fillRect(xPos, yPos, mapCellSize, mapCellSize);
 
         break;
     }
@@ -32,13 +38,15 @@ export class MapComponent extends PureComponent {
       map,
       openCellConfig,
       mapCellSize,
+      mapSize,
+      spaceBetweenMapCells,
     } = this.props;
 
     const canvas = this.canvasRef.current;
     const ctx = canvas.getContext("2d");
 
-    canvas.width = map[0].length * mapCellSize + map[0].length;
-    canvas.height = map.length * mapCellSize + map.length;
+    canvas.width = mapSize.x * mapCellSize + mapSize.x * spaceBetweenMapCells;
+    canvas.height = mapSize.y * mapCellSize + mapSize.y * spaceBetweenMapCells;
 
     canvas.addEventListener('click', ({ offsetX, offsetY }) => {
       openCellConfig({ x: offsetX, y: offsetY });

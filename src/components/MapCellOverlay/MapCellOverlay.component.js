@@ -3,10 +3,6 @@ import { PureComponent } from "react";
 import './MapCellOverlay.styles.scss';
 
 export class MapCellOverlayComponent extends PureComponent {
-  state = {
-    isImageChanged: false,
-  };
-
   render() {
     const {
       closeFunction,
@@ -17,8 +13,10 @@ export class MapCellOverlayComponent extends PureComponent {
         r, g, b,
       },
       handleSubmit,
+      handleImageSelect,
+      isImageChanged,
+      selectedImage,
     } = this.props;
-    const { isImageChanged } = this.state;
 
     return (
       <div className="MapCellOverlay">
@@ -28,17 +26,18 @@ export class MapCellOverlayComponent extends PureComponent {
         </div>
         <div className="MapCellOverlay-Forms">
           {isColorTabOpened ? (
-            <form onSubmit={(e) => handleSubmit(e, 'color')} className="MapCellOverlay-ColorForm">
-              <div className="MapCellOverlay-ColorForm-Wrapper">
+            <form onSubmit={(e) => handleSubmit(e, 'color')} className="MapCellOverlay-Form">
+              <div className="MapCellOverlay-Form-Wrapper">
+                <div className="MapCellOverlay-Form-Preview-Outline" />
                 <div
-                  className="MapCellOverlay-ColorForm-ColorResult"
+                  className="MapCellOverlay-Form-Preview"
                   style={{ backgroundColor: `rgb(${r},${g},${b})` }}
                 />
-                <div className="MapCellOverlay-ColorForm-Colors">
-                  <div className="MapCellOverlay-ColorForm-Color">
-                    <label htmlFor="MapCellOverlay-ColorForm-Color-R">R</label>
+                <div className="MapCellOverlay-Form-Colors">
+                  <div className="MapCellOverlay-Form-Color">
+                    <label htmlFor="MapCellOverlay-Form-Color-R">R</label>
                     <input
-                      id="MapCellOverlay-ColorForm-Color-R"
+                      id="MapCellOverlay-Form-Color-R"
                       onChange={({ target: { value } }) => selectColor(value, 'r')}
                       type="range"
                       min="0"
@@ -46,7 +45,7 @@ export class MapCellOverlayComponent extends PureComponent {
                       value={r}
                     />
                     <input
-                      id="MapCellOverlay-ColorForm-Color-R"
+                      id="MapCellOverlay-Form-Color-R"
                       onChange={({ target: { value } }) => selectColor(value, 'r')}
                       type="number"
                       min="0"
@@ -54,10 +53,10 @@ export class MapCellOverlayComponent extends PureComponent {
                       value={r}
                     />
                   </div>
-                  <div className="MapCellOverlay-ColorForm-Color">
-                    <label htmlFor="MapCellOverlay-ColorForm-Color-G">G</label>
+                  <div className="MapCellOverlay-Form-Color">
+                    <label htmlFor="MapCellOverlay-Form-Color-R">G</label>
                     <input
-                      id="MapCellOverlay-ColorForm-Color-G"
+                      id="MapCellOverlay-Form-Color-R"
                       onChange={({ target: { value } }) => selectColor(value, 'g')}
                       type="range"
                       min="0"
@@ -65,7 +64,7 @@ export class MapCellOverlayComponent extends PureComponent {
                       value={g}
                     />
                     <input
-                      id="MapCellOverlay-ColorForm-Color-G"
+                      id="MapCellOverlay-Form-Color-R"
                       onChange={({ target: { value } }) => selectColor(value, 'g')}
                       type="number"
                       min="0"
@@ -73,10 +72,10 @@ export class MapCellOverlayComponent extends PureComponent {
                       value={g}
                     />
                   </div>
-                  <div className="MapCellOverlay-ColorForm-Color">
-                    <label htmlFor="MapCellOverlay-ColorForm-Color-B">B</label>
+                  <div className="MapCellOverlay-Form-Color">
+                    <label htmlFor="MapCellOverlay-Form-Color-R">B</label>
                     <input
-                      id="MapCellOverlay-ColorForm-Color-B"
+                      id="MapCellOverlay-Form-Color-R"
                       onChange={({ target: { value } }) => selectColor(value, 'b')}
                       type="range"
                       min="0"
@@ -84,7 +83,7 @@ export class MapCellOverlayComponent extends PureComponent {
                       value={b}
                     />
                     <input
-                      id="MapCellOverlay-ColorForm-Color-B"
+                      id="MapCellOverlay-Form-Color-R"
                       onChange={({ target: { value } }) => selectColor(value, 'b')}
                       type="number"
                       min="0"
@@ -94,21 +93,34 @@ export class MapCellOverlayComponent extends PureComponent {
                   </div>
                 </div>
               </div>
-              <div className="MapCellOverlay-ColorForm-Buttons">
-                <button onClick={closeFunction} className="MapCellOverlay-ColorForm-ButtonCancel">Cancel</button>
-                <button className="MapCellOverlay-ColorForm-ButtonSave">Save</button>
+              <div className="MapCellOverlay-Form-Buttons">
+                <button onClick={closeFunction} className="MapCellOverlay-Form-ButtonCancel">Cancel</button>
+                <button className="MapCellOverlay-Form-ButtonSave">Save</button>
               </div>
             </form>
           ) : (
-            <form onSubmit={(e) => handleSubmit(e, 'image')} className="MapCellOverlay-ImageForm">
-              <input
-                className="MapCellOverlay-ImageForm-FileInput"
-                onChange={() => this.setState({ isImageChanged: true })}
-                type="file"
-              />
-              <div className="MapCellOverlay-ImageForm-Buttons">
-                <button onClick={closeFunction} className="MapCellOverlay-ImageForm-ButtonCancel">Cancel</button>
-                <button className="MapCellOverlay-ImageForm-ButtonSave" data-lesch-changed={isImageChanged}>Save</button>
+            <form onSubmit={(e) => handleSubmit(e, 'image')} className="MapCellOverlay-Form">
+              <div className="MapCellOverlay-Form-Wrapper">
+                <div className="MapCellOverlay-Form-Preview-Outline" />
+                <img src={selectedImage} className="MapCellOverlay-Form-Preview" alt="Preview" />
+                <div>
+                  <label
+                    htmlFor="MapCellOverlay-Form-FileInput"
+                    className="MapCellOverlay-Form-FileInput-Label"
+                  >
+                    Upload File
+                  </label>
+                  <input
+                    id="MapCellOverlay-Form-FileInput"
+                    className="MapCellOverlay-Form-FileInput"
+                    onChange={handleImageSelect}
+                    type="file"
+                  />
+                </div>
+              </div>
+              <div className="MapCellOverlay-Form-Buttons">
+                <button onClick={closeFunction} className="MapCellOverlay-Form-ButtonCancel">Cancel</button>
+                <button className="MapCellOverlay-Form-ButtonSave" disabled={!isImageChanged}>Save</button>
               </div>
             </form>
           )}

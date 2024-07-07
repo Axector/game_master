@@ -19,4 +19,6 @@ export const store = configureStore({
   reducer: injectReducers(getStaticReducers()),
 });
 
+export const getStore = () => store;
+
 export default store;

@@ -1,7 +1,18 @@
+@use '../../styles/mixins.scss';
+
 .Map {
   padding: 100px;
 
   &-Wrapper {
-    display: grid;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+$mobile-screen-width: var(--mobile-screen-width);
+
+@include mixins.mobile {
+  .Map {
+    padding: 20px;
   }
 }
