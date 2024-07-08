@@ -65,19 +65,15 @@ export class MapCellOverlayContainer extends PureComponent {
     } = this.props;
 
     if (type === 'image') {
-      const colors = defaultColor.replace('rgb', '').replace('(', '').replace(')', '').split(',');
-
       this.setState({
         isColorTabOpened: false,
         selectedImage: data,
-        selectColor: { r: colors[0], g: colors[1], b: colors[2] },
+        selectedColor: defaultColor,
       });
     } else if (type === 'color') {
-      const colors = data.replace('rgb', '').replace('(', '').replace(')', '').split(',');
-
       this.setState({
         isColorTabOpened: true,
-        selectedColor: { r: colors[0], g: colors[1], b: colors[2] },
+        selectedColor: data,
         selectedImage: '',
         isImageChanged: false,
       });
@@ -88,22 +84,8 @@ export class MapCellOverlayContainer extends PureComponent {
     this.setState({ isColorTabOpened: state });
   }
 
-  selectColor(value, type) {
-    const { selectedColor } = this.state;
-    const colorValue = Math.min(Math.max(value, 0), 255);
-
-    switch (type) {
-      case 'r':
-        this.setState({ selectedColor: { ...selectedColor, r: colorValue } });
-        break;
-      case 'g':
-        this.setState({ selectedColor: { ...selectedColor, g: colorValue } });
-        break;
-      case 'b':
-        this.setState({ selectedColor: { ...selectedColor, b: colorValue } });
-        break;
-      default:
-    }
+  selectColor(value) {
+    this.setState({ selectedColor: value });
   }
 
   getMapCopy() {
@@ -127,12 +109,10 @@ export class MapCellOverlayContainer extends PureComponent {
         x, y
       },
     } = this.props;
-    const { selectedColor: {
-      r, g, b,
-    } } = this.state;
+    const { selectedColor } = this.state;
 
     const newMap = this.getMapCopy();
-    newMap[y][x] = { type: 'color', data: `rgb(${r},${g},${b})` };
+    newMap[y][x] = { type: 'color', data: selectedColor };
 
     return newMap;
   }

@@ -40,15 +40,20 @@
       height: 100%;
     }
 
+    &-ColorSwatch {
+      width: 40vw;
+      height: 40vw;
+    }
+
     &-Preview {
-      height: 25vw;
-      width: 25vw;
+      height: 30vw;
+      width: 30vw;
       object-fit: fill;
 
       &-Outline {
         position: absolute;
-        height: 25vw;
-        width: 25vw;
+        height: 30vw;
+        width: 30vw;
         outline: solid;
       }
 
@@ -56,14 +61,6 @@
         visibility: hidden;
         pointer-events: none;
       }
-    }
-
-    &-Colors {
-      width: 100%;
-    }
-
-    &-Color {
-      display: flex;
     }
 
     &-Buttons {
@@ -124,6 +121,11 @@
 
       &-Wrapper {
         margin-block: 4vw;
+      }
+
+      &-ColorSwatch {
+        width: 60vw;
+        height: 60vw;
       }
 
       &-Preview {

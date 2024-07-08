@@ -6,7 +6,7 @@ const getInitialState = () => ({
   mapCellSize: 0,
   spaceBetweenMapCells: 1,
   selectedCell: {},
-  defaultCell: { type: "color", data: "rgb(119,119,119)" }
+  defaultCell: { type: "color", data: "#777777" }
 });
 
 export const MapReducer = (state = getInitialState(), action) => {

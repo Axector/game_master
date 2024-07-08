@@ -9,9 +9,7 @@ export class MapCellOverlayComponent extends PureComponent {
       isColorTabOpened,
       toggleColorTab,
       selectColor,
-      selectedColor: {
-        r, g, b,
-      },
+      selectedColor,
       handleSubmit,
       handleImageSelect,
       isImageChanged,
@@ -28,70 +26,12 @@ export class MapCellOverlayComponent extends PureComponent {
           {isColorTabOpened ? (
             <form onSubmit={(e) => handleSubmit(e, 'color')} className="MapCellOverlay-Form">
               <div className="MapCellOverlay-Form-Wrapper">
-                <div className="MapCellOverlay-Form-Preview-Outline" />
-                <div
-                  className="MapCellOverlay-Form-Preview"
-                  style={{ backgroundColor: `rgb(${r},${g},${b})` }}
+                <input
+                  type="color"
+                  className="MapCellOverlay-Form-ColorSwatch"
+                  onChange={({ target: { value } }) => selectColor(value)}
+                  value={selectedColor}
                 />
-                <div className="MapCellOverlay-Form-Colors">
-                  <div className="MapCellOverlay-Form-Color">
-                    <label htmlFor="MapCellOverlay-Form-Color-R">R</label>
-                    <input
-                      id="MapCellOverlay-Form-Color-R"
-                      onChange={({ target: { value } }) => selectColor(value, 'r')}
-                      type="range"
-                      min="0"
-                      max="255"
-                      value={r}
-                    />
-                    <input
-                      id="MapCellOverlay-Form-Color-R"
-                      onChange={({ target: { value } }) => selectColor(value, 'r')}
-                      type="number"
-                      min="0"
-                      max="255"
-                      value={r}
-                    />
-                  </div>
-                  <div className="MapCellOverlay-Form-Color">
-                    <label htmlFor="MapCellOverlay-Form-Color-R">G</label>
-                    <input
-                      id="MapCellOverlay-Form-Color-R"
-                      onChange={({ target: { value } }) => selectColor(value, 'g')}
-                      type="range"
-                      min="0"
-                      max="255"
-                      value={g}
-                    />
-                    <input
-                      id="MapCellOverlay-Form-Color-R"
-                      onChange={({ target: { value } }) => selectColor(value, 'g')}
-                      type="number"
-                      min="0"
-                      max="255"
-                      value={g}
-                    />
-                  </div>
-                  <div className="MapCellOverlay-Form-Color">
-                    <label htmlFor="MapCellOverlay-Form-Color-R">B</label>
-                    <input
-                      id="MapCellOverlay-Form-Color-R"
-                      onChange={({ target: { value } }) => selectColor(value, 'b')}
-                      type="range"
-                      min="0"
-                      max="255"
-                      value={b}
-                    />
-                    <input
-                      id="MapCellOverlay-Form-Color-R"
-                      onChange={({ target: { value } }) => selectColor(value, 'b')}
-                      type="number"
-                      min="0"
-                      max="255"
-                      value={b}
-                    />
-                  </div>
-                </div>
               </div>
               <div className="MapCellOverlay-Form-Buttons">
                 <button onClick={closeFunction} className="MapCellOverlay-Form-ButtonCancel">Cancel</button>
