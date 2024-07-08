@@ -55,6 +55,7 @@ export class MapCellOverlayComponent extends PureComponent {
                     className="MapCellOverlay-Form-FileInput"
                     onChange={handleImageSelect}
                     type="file"
+                    accept="image/*"
                   />
                 </div>
               </div>

@@ -18,11 +18,13 @@ export const mapDispatchToProps = (dispatch) => ({
 export class MapContainer extends PureComponent {
   state = {
     currentMapSize: this.props.mapSize,
+    currentSpaceBetweenCells: this.props.spaceBetweenMapCells,
   }
 
   containerFunctions = {
     openCellConfig: this.openCellConfig.bind(this),
     handleMapSizeChange: this.handleMapSizeChange.bind(this),
+    handleSpaceBetweenCellsChange: this.handleSpaceBetweenCellsChange.bind(this),
   };
 
   containerProps() {
@@ -43,17 +45,21 @@ export class MapContainer extends PureComponent {
     });
   }
 
-  openCellConfig({ x, y }) {
+  openCellConfig(x, y) {
     const {
       toggleMapCellOverlay,
       mapCellSize,
       map,
       mapSize,
       updateSelectedCell,
+      spaceBetweenMapCells,
     } = this.props;
 
-    const xPos = Math.floor((x - mapSize.x) / mapCellSize);
-    const yPos = Math.floor((y - mapSize.y) / mapCellSize);
+    const canvasWidth = mapSize.x * mapCellSize + mapSize.x * spaceBetweenMapCells;
+    const canvasHeight = mapSize.y * mapCellSize + mapSize.y * spaceBetweenMapCells;
+
+    const xPos = Math.floor((x / canvasWidth) * mapSize.x);
+    const yPos = Math.floor((y / canvasHeight) * mapSize.y);
 
     updateSelectedCell({ ...map[yPos][xPos], x: xPos, y: yPos });
     toggleMapCellOverlay(true);
@@ -67,6 +73,13 @@ export class MapContainer extends PureComponent {
 
     this.setState({ currentMapSize: newMapSize });
     MapDispatcher.updateMapSize(newMapSize);
+  }
+
+  handleSpaceBetweenCellsChange(value) {
+    const processedValue = Math.min(Math.max(value, 0), 10)
+
+    this.setState({ currentSpaceBetweenCells: processedValue });
+    MapDispatcher.updateSpaceBetweenMapCells(processedValue);
   }
 
   render() {

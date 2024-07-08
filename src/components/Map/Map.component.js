@@ -5,6 +5,10 @@ import './Map.styles.scss';
 export class MapComponent extends PureComponent {
   canvasRef = createRef();
 
+  state = {
+    eventsSet: false,
+  };
+
   drawMapCell(ctx, cell, x, y) {
     const { type, data } = cell;
     const {
@@ -41,6 +45,7 @@ export class MapComponent extends PureComponent {
       mapSize,
       spaceBetweenMapCells,
     } = this.props;
+    const { eventsSet } = this.state;
 
     const canvas = this.canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -48,9 +53,13 @@ export class MapComponent extends PureComponent {
     canvas.width = mapSize.x * mapCellSize + mapSize.x * spaceBetweenMapCells;
     canvas.height = mapSize.y * mapCellSize + mapSize.y * spaceBetweenMapCells;
 
-    canvas.addEventListener('click', ({ offsetX, offsetY }) => {
-      openCellConfig({ x: offsetX, y: offsetY });
-    });
+    if (!eventsSet) {
+      canvas.addEventListener('click', ({ offsetX, offsetY }) => {
+        openCellConfig(offsetX, offsetY);
+      });
+
+      this.setState({ eventsSet: true });
+    }
 
     map.forEach((mapLine, y) => {
       mapLine.forEach((mapCell, x) => {
@@ -73,6 +82,8 @@ export class MapComponent extends PureComponent {
     const {
       handleMapSizeChange,
       currentMapSize,
+      spaceBetweenMapCells,
+      handleSpaceBetweenCellsChange,
     } = this.props;
 
     return (
@@ -110,6 +121,23 @@ export class MapComponent extends PureComponent {
               max="50"
               value={currentMapSize.y}
               onChange={({ target: { value } }) => handleMapSizeChange(value, 'y')}
+            />
+          </div>
+          <div className="Map-Settings-SpaceBetweenCells">
+            <label>Space between cells</label>
+            <input
+              type="range"
+              min="0"
+              max="10"
+              value={spaceBetweenMapCells}
+              onChange={({ target: { value } }) => handleSpaceBetweenCellsChange(value)}
+            />
+            <input
+              type="number"
+              min="0"
+              max="10"
+              value={spaceBetweenMapCells}
+              onChange={({ target: { value } }) => handleSpaceBetweenCellsChange(value)}
             />
           </div>
         </div>

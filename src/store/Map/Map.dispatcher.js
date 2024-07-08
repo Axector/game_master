@@ -61,6 +61,11 @@ export class MapDispatcher {
 
     this.initMapCellSize();
   }
+
+  updateSpaceBetweenMapCells(newSpaceBetweenMapCells) {
+    this.dispatch(updateMapStore({ spaceBetweenMapCells: newSpaceBetweenMapCells }));
+    this.initMapCellSize();
+  }
 }
 
 const mapDispatcher = new MapDispatcher();

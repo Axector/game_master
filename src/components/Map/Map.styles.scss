@@ -5,8 +5,11 @@
 
   &-Settings {
     margin-bottom: 20px;
-    &-MapSize {
+
+    & > div {
       display: flex;
+      align-items: center;
+      margin-block: 10px;
     }
   }
 
