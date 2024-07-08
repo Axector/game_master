@@ -1,16 +1,8 @@
 import { getStore } from "..";
 import { updateMapStore } from "./Map.action";
-import { debounce } from '../../utils/debounce';
 
 export class MapDispatcher {
   dispatch = getStore().dispatch;
-
-  init() {
-    this.initMap();
-    this.initMapCellSize();
-
-    window.addEventListener('resize', debounce(this.initMapCellSize.bind(this), 100));
-  }
 
   initMap() {
     const {
@@ -36,7 +28,6 @@ export class MapDispatcher {
 
     const mapWrapper = document.getElementsByClassName('Map-Wrapper')[0];
     const mapWrapperWidth = mapWrapper.getBoundingClientRect().width;
-
     const mapCellSize = Math.floor(mapWrapperWidth / mapSize.x - spaceBetweenMapCells);
 
     this.dispatch(updateMapStore({ mapCellSize }));
