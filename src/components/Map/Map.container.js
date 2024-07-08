@@ -2,6 +2,7 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 import MapComponent from "./Map.component";
 import { updateMapStore } from "../../store/Map/Map.action";
+import MapDispatcher from "../../store/Map/Map.dispatcher";
 
 export const mapStateToProps = (state) => ({
   map: state.MapReducer.map,
@@ -15,8 +16,13 @@ export const mapDispatchToProps = (dispatch) => ({
 });
 
 export class MapContainer extends PureComponent {
+  state = {
+    currentMapSize: this.props.mapSize,
+  }
+
   containerFunctions = {
     openCellConfig: this.openCellConfig.bind(this),
+    handleMapSizeChange: this.handleMapSizeChange.bind(this),
   };
 
   containerProps() {
@@ -26,12 +32,14 @@ export class MapContainer extends PureComponent {
       mapSize,
       spaceBetweenMapCells,
     } = this.props;
+    const { currentMapSize } = this.state;
 
     return ({
       map,
       mapCellSize,
       mapSize,
       spaceBetweenMapCells,
+      currentMapSize,
     });
   }
 
@@ -49,6 +57,16 @@ export class MapContainer extends PureComponent {
 
     updateSelectedCell({ ...map[yPos][xPos], x: xPos, y: yPos });
     toggleMapCellOverlay(true);
+  }
+
+  handleMapSizeChange(value, type) {
+    const { mapSize } = this.props;
+
+    const newMapSize = { ...mapSize };
+    newMapSize[type] = Math.min(Math.max(value, 1), 50);
+
+    this.setState({ currentMapSize: newMapSize });
+    MapDispatcher.updateMapSize(newMapSize);
   }
 
   render() {

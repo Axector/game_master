@@ -70,8 +70,49 @@ export class MapComponent extends PureComponent {
   render() {
     this.waitForCanvas(this.drawMap.bind(this));
 
+    const {
+      handleMapSizeChange,
+      currentMapSize,
+    } = this.props;
+
     return (
       <div className="Map" >
+        <div className="Map-Settings">
+          <div className="Map-Settings-MapSize">
+            <label>Map Width</label>
+            <input
+              type="range"
+              min="1"
+              max="50"
+              value={currentMapSize.x}
+              onChange={({ target: { value } }) => handleMapSizeChange(value, 'x')}
+            />
+            <input
+              type="number"
+              min="1"
+              max="50"
+              value={currentMapSize.x}
+              onChange={({ target: { value } }) => handleMapSizeChange(value, 'x')}
+            />
+          </div>
+          <div className="Map-Settings-MapSize">
+            <label>Map Height</label>
+            <input
+              type="range"
+              min="1"
+              max="50"
+              value={currentMapSize.y}
+              onChange={({ target: { value } }) => handleMapSizeChange(value, 'y')}
+            />
+            <input
+              type="number"
+              min="1"
+              max="50"
+              value={currentMapSize.y}
+              onChange={({ target: { value } }) => handleMapSizeChange(value, 'y')}
+            />
+          </div>
+        </div>
         <div className="Map-Wrapper">
           <canvas className="Canvas" ref={this.canvasRef} />
         </div>

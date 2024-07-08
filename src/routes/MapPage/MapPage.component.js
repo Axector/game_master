@@ -14,7 +14,6 @@ export class MapPageComponent extends PureComponent {
 
     return (
       <div className="MapPage">
-        <h1>Map</h1>
         <Map toggleMapCellOverlay={toggleMapCellOverlay} />
         <Overlay Component={MapCellOverlay} isVisible={isVisible} closeFunction={() => toggleMapCellOverlay(false)} />
       </div>

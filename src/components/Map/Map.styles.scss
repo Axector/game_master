@@ -3,6 +3,13 @@
 .Map {
   padding: 100px;
 
+  &-Settings {
+    margin-bottom: 20px;
+    &-MapSize {
+      display: flex;
+    }
+  }
+
   &-Wrapper {
     display: flex;
     justify-content: center;

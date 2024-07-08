@@ -32,6 +32,35 @@ export class MapDispatcher {
 
     this.dispatch(updateMapStore({ mapCellSize }));
   }
+
+  updateMapSize(newMapSize) {
+    const {
+      map: currentMap,
+      defaultCell,
+    } = getStore().getState().MapReducer;
+
+    const map = new Array(newMapSize.y);
+    for (let i = 0; i < newMapSize.y; ++i) {
+      map[i] = new Array(newMapSize.x).fill(defaultCell);
+    }
+
+    currentMap.forEach((mapLine, y) => {
+      mapLine.forEach((cell, x) => {
+        if (y >= newMapSize.y || x >= newMapSize.x) {
+          return;
+        }
+
+        map[y][x] = cell;
+      });
+    });
+
+    this.dispatch(updateMapStore({
+      mapSize: newMapSize,
+      map,
+    }));
+
+    this.initMapCellSize();
+  }
 }
 
 const mapDispatcher = new MapDispatcher();
