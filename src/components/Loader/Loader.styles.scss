@@ -1,0 +1,29 @@
+.Loader {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Loader:after {
+  content: "Loading";
+  color: #ffffff;
+  font-size: 20px;
+  text-transform: uppercase;
+  animation: infiniteRotate 2s linear infinite;
+}
+
+@keyframes infiniteRotate {
+  0% {
+    transform: rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateZ(360deg);
+  }
+}

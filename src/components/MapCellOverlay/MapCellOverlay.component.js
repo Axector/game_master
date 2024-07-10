@@ -13,7 +13,9 @@ export class MapCellOverlayComponent extends PureComponent {
       handleSubmit,
       handleImageSelect,
       isImageChanged,
-      selectedImage,
+      selectedImage: {
+        imageUrl: selectedImage
+      },
     } = this.props;
 
     return (

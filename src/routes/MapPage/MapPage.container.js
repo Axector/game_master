@@ -2,6 +2,13 @@ import { PureComponent } from "react";
 import MapPageComponent from "./MapPage.component";
 import MapDispatcher from "../../store/Map/Map.dispatcher";
 import { debounce } from '../../utils/debounce';
+import { connect } from "react-redux";
+
+export const mapStateToProps = (state) => ({
+  isLoading: state.MapReducer.isLoading,
+});
+
+export const mapDispatchToProps = () => ({});
 
 export class MapPageContainer extends PureComponent {
   state = {
@@ -10,12 +17,15 @@ export class MapPageContainer extends PureComponent {
 
   containerFunctions = {
     toggleMapCellOverlay: this.toggleMapCellOverlay.bind(this),
+    handleMapSave: this.handleMapSave.bind(this),
   };
 
   containerProps() {
+    const { isLoading } = this.props;
     const { isVisible } = this.state;
 
     return ({
+      isLoading: isLoading,
       isVisible: isVisible,
     });
   }
@@ -36,6 +46,10 @@ export class MapPageContainer extends PureComponent {
     this.setState({ isVisible: state });
   }
 
+  handleMapSave() {
+    MapDispatcher.saveMap();
+  }
+
   render() {
     return (
       <MapPageComponent
@@ -46,4 +60,4 @@ export class MapPageContainer extends PureComponent {
   }
 }
 
-export default MapPageContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(MapPageContainer);

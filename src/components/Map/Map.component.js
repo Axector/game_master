@@ -1,6 +1,7 @@
 import { PureComponent, createRef } from "react";
 
 import './Map.styles.scss';
+import { getImage } from "../../db/firebase";
 
 export class MapComponent extends PureComponent {
   canvasRef = createRef();
@@ -9,7 +10,7 @@ export class MapComponent extends PureComponent {
     eventsSet: false,
   };
 
-  drawMapCell(ctx, cell, x, y) {
+  async drawMapCell(ctx, cell, x, y) {
     const { type, data } = cell;
     const {
       mapCellSize,
@@ -21,11 +22,15 @@ export class MapComponent extends PureComponent {
 
     switch (type) {
       case 'image':
+        const { imageName } = cell;
+
+        const imageUrl = await getImage(imageName);
+
         const img = new Image();
         img.onload = () => {
           ctx.drawImage(img, xPos, yPos, mapCellSize, mapCellSize);
         };
-        img.src = data;
+        img.src = imageUrl;
 
         break;
       default:
@@ -81,7 +86,7 @@ export class MapComponent extends PureComponent {
 
     const {
       handleMapSizeChange,
-      currentMapSize,
+      mapSize,
       spaceBetweenMapCells,
       handleSpaceBetweenCellsChange,
     } = this.props;
@@ -94,16 +99,16 @@ export class MapComponent extends PureComponent {
             <input
               type="range"
               min="1"
-              max="50"
-              value={currentMapSize.x}
-              onChange={({ target: { value } }) => handleMapSizeChange(value, 'x')}
+              max="30"
+              value={mapSize.x}
+              onChange={({ target: { value } }) => handleMapSizeChange(value, 'x', 1, 30)}
             />
             <input
               type="number"
               min="1"
-              max="50"
-              value={currentMapSize.x}
-              onChange={({ target: { value } }) => handleMapSizeChange(value, 'x')}
+              max="30"
+              value={mapSize.x}
+              onChange={({ target: { value } }) => handleMapSizeChange(value, 'x', 1, 30)}
             />
           </div>
           <div className="Map-Settings-MapSize">
@@ -112,15 +117,15 @@ export class MapComponent extends PureComponent {
               type="range"
               min="1"
               max="50"
-              value={currentMapSize.y}
-              onChange={({ target: { value } }) => handleMapSizeChange(value, 'y')}
+              value={mapSize.y}
+              onChange={({ target: { value } }) => handleMapSizeChange(value, 'y', 1, 50)}
             />
             <input
               type="number"
               min="1"
               max="50"
-              value={currentMapSize.y}
-              onChange={({ target: { value } }) => handleMapSizeChange(value, 'y')}
+              value={mapSize.y}
+              onChange={({ target: { value } }) => handleMapSizeChange(value, 'y', 1, 50)}
             />
           </div>
           <div className="Map-Settings-SpaceBetweenCells">
@@ -128,16 +133,16 @@ export class MapComponent extends PureComponent {
             <input
               type="range"
               min="0"
-              max="10"
+              max="5"
               value={spaceBetweenMapCells}
-              onChange={({ target: { value } }) => handleSpaceBetweenCellsChange(value)}
+              onChange={({ target: { value } }) => handleSpaceBetweenCellsChange(value, 0, 5)}
             />
             <input
               type="number"
               min="0"
-              max="10"
+              max="5"
               value={spaceBetweenMapCells}
-              onChange={({ target: { value } }) => handleSpaceBetweenCellsChange(value)}
+              onChange={({ target: { value } }) => handleSpaceBetweenCellsChange(value, 0, 5)}
             />
           </div>
         </div>

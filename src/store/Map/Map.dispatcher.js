@@ -1,10 +1,29 @@
 import { getStore } from "..";
 import { updateMapStore } from "./Map.action";
+import { getMapData, saveMapData } from "../../db/firebase";
 
 export class MapDispatcher {
   dispatch = getStore().dispatch;
 
-  initMap() {
+  async initMap() {
+    const mapData = await getMapData();
+
+    if (mapData) {
+      const {
+        mapSize: fetchedMapSize,
+        spaceBetweenMapCells: fetchedSpaceBetweenMapCells,
+        map: fetchedMap,
+      } = mapData;
+
+      this.dispatch(updateMapStore({
+        map: fetchedMap,
+        mapSize: fetchedMapSize,
+        spaceBetweenMapCells: fetchedSpaceBetweenMapCells,
+      }));
+
+      return;
+    }
+
     const {
       mapSize,
       defaultCell,
@@ -16,8 +35,6 @@ export class MapDispatcher {
     }
 
     this.dispatch(updateMapStore({ map }));
-
-    return map;
   }
 
   initMapCellSize() {
@@ -65,6 +82,27 @@ export class MapDispatcher {
   updateSpaceBetweenMapCells(newSpaceBetweenMapCells) {
     this.dispatch(updateMapStore({ spaceBetweenMapCells: newSpaceBetweenMapCells }));
     this.initMapCellSize();
+  }
+
+  saveMap() {
+    const {
+      mapSize,
+      map,
+      spaceBetweenMapCells,
+    } = getStore().getState().MapReducer;
+
+    const mapObject = {};
+    map.forEach((mapLine, i) => {
+      mapObject[i] = mapLine;
+    });
+
+    saveMapData({
+      spaceBetweenMapCells: spaceBetweenMapCells,
+      mapSize: mapSize,
+      map: mapObject
+    });
+
+    this.dispatch(updateMapStore({ isLoading: true }));
   }
 }
 

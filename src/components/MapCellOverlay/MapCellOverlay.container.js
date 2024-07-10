@@ -2,6 +2,7 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 import MapCellOverlayComponent from "./MapCellOverlay.component";
 import { updateMapStore } from "../../store/Map/Map.action";
+import { getImage, saveImage } from "../../db/firebase";
 
 export const mapStateToProps = (state) => ({
   map: state.MapReducer.map,
@@ -18,7 +19,7 @@ export class MapCellOverlayContainer extends PureComponent {
     isColorTabOpened: true,
     selectedColor: { r: 0, g: 0, b: 0 },
     isImageChanged: false,
-    selectedImage: '',
+    selectedImage: { imageUrl: '' },
   };
 
   containerFunctions = {
@@ -26,10 +27,10 @@ export class MapCellOverlayContainer extends PureComponent {
     selectColor: this.selectColor.bind(this),
     handleSubmit: this.handleSubmit.bind(this),
     handleImageSelect: this.handleImageSelect.bind(this),
+    closeFunction: this.closeOverlay.bind(this),
   };
 
   containerProps() {
-    const { closeFunction } = this.props;
     const {
       isColorTabOpened,
       selectedColor,
@@ -38,7 +39,6 @@ export class MapCellOverlayContainer extends PureComponent {
     } = this.state;
 
     return ({
-      closeFunction,
       isColorTabOpened,
       selectedColor,
       isImageChanged,
@@ -50,14 +50,19 @@ export class MapCellOverlayContainer extends PureComponent {
     const { isVisible } = this.props;
     const { isVisible: prevIsVisisble } = prevProps;
 
-    if (isVisible === prevIsVisisble) {
+    if (isVisible === prevIsVisisble || !isVisible) {
       return;
     }
 
+    this.setSelectedCellOverlay();
+  }
+
+  async setSelectedCellOverlay() {
     const {
       selectedCell: {
         type,
         data,
+        imageName,
       },
       defaultCell: {
         data: defaultColor,
@@ -67,14 +72,18 @@ export class MapCellOverlayContainer extends PureComponent {
     if (type === 'image') {
       this.setState({
         isColorTabOpened: false,
-        selectedImage: data,
         selectedColor: defaultColor,
       });
+
+      const selectedImage = {
+        imageUrl: (imageName ? await getImage(imageName) : '')
+      };
+
+      this.setState({ selectedImage: selectedImage });
     } else if (type === 'color') {
       this.setState({
         isColorTabOpened: true,
         selectedColor: data,
-        selectedImage: '',
         isImageChanged: false,
       });
     }
@@ -123,11 +132,20 @@ export class MapCellOverlayContainer extends PureComponent {
         x, y
       },
     } = this.props;
-    const { selectedImage } = this.state;
+    const {
+      selectedImage: {
+        imageUrl,
+        imageFile,
+        imageFile: {
+          name: imageName,
+        },
+      },
+    } = this.state;
+
+    saveImage(imageFile);
 
     const newMap = this.getMapCopy();
-    const imageSrc = selectedImage;
-    newMap[y][x] = { type: 'image', data: imageSrc };
+    newMap[y][x] = { type: 'image', data: imageUrl, imageName: imageName };
 
     return newMap;
   }
@@ -135,10 +153,7 @@ export class MapCellOverlayContainer extends PureComponent {
   handleSubmit(e, type) {
     e.preventDefault();
 
-    const {
-      updateMap,
-      closeFunction,
-    } = this.props;
+    const { updateMap } = this.props;
 
     if (type === 'color') {
       updateMap(this.handleColorSubmit());
@@ -146,16 +161,25 @@ export class MapCellOverlayContainer extends PureComponent {
       updateMap(this.handleImageSubmit());
     }
 
-    closeFunction(e);
+    this.closeOverlay(e);
   }
 
   handleImageSelect(e) {
-    const imageUrl = URL.createObjectURL(e.target.files[0]);
+    const imageFile = e.target.files[0];
+    const imageUrl = URL.createObjectURL(imageFile);
 
     this.setState({
       isImageChanged: true,
-      selectedImage: imageUrl,
+      selectedImage: { imageUrl, imageFile },
     })
+  }
+
+  closeOverlay(e) {
+    const { closeFunction } = this.props;
+
+    this.setState({ selectedImage: { imageUrl: '' } });
+
+    closeFunction(e);
   }
 
   render() {
