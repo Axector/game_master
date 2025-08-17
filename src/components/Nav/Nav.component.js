@@ -1,5 +1,5 @@
 import { PureComponent } from "react";
-import { Link as ReactLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import "./Nav.styles.scss";
 
@@ -9,10 +9,10 @@ export class NavComponent extends PureComponent {
       <nav className="Nav">
         <ul className="links">
           <li className="link-wrapper">
-            <ReactLink className="link" to="/game_master">Home</ReactLink>
+            <Link className="link" to="/game_master">Home</Link>
           </li>
           <li className="link-wrapper">
-            <ReactLink className="link" to="/game_master/#/map">Map</ReactLink>
+            <Link className="link" to="/game_master/map">Map</Link>
           </li>
         </ul>
       </nav>
