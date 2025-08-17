@@ -12,7 +12,7 @@ function App() {
         <Nav />
         <Routes>
           <Route path="/game_master" element={<HomePage />} />
-          <Route path="/game_master/map" element={<MapPage />} />
+          <Route path="/game_master/#/map" element={<MapPage />} />
         </Routes>
       </Router>
     </Provider>
