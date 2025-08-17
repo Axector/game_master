@@ -8,7 +8,7 @@ import store from './store';
 function App() {
   return (
     <Provider store={store}>
-      <Router baseline="/">
+      <Router>
         <Nav />
         <Routes>
           <Route path="/game_master" element={<HomePage />} />
