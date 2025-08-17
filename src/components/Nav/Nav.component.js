@@ -12,7 +12,7 @@ export class NavComponent extends PureComponent {
             <ReactLink className="link" to="/game_master">Home</ReactLink>
           </li>
           <li className="link-wrapper">
-            <ReactLink className="link" to="/game_master/map">Map</ReactLink>
+            <ReactLink className="link" to="/game_master/#/map">Map</ReactLink>
           </li>
         </ul>
       </nav>
